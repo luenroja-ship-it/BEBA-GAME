@@ -1,82 +1,87 @@
-const startBtn = document.getElementById('startBtn');
-const usernameInput = document.getElementById('username');
-const userInput = document.getElementById('userInput');
-const gameContainer = document.getElementById('gameContainer');
-const greeting = document.getElementById('greeting');
-const questionContainer = document.getElementById('questionContainer');
-const optionsContainer = document.getElementById('optionsContainer');
-const resultContainer = document.getElementById('resultContainer');
-const livesContainer = document.getElementById('lives');
-const bgMusic = document.getElementById('bgMusic');
-const correctSound = document.getElementById('correctSound');
-const wrongSound = document.getElementById('wrongSound');
-
-let username = '';
-let currentQuestion = 0;
-let lives = 3;
-
-const questions = [
-    { question: '¿Qué criatura aparece solo en luna llena?', options: ['Vampiro', 'Hombre Lobo', 'Momia'], correct: 1 },
-    { question: '¿Qué elemento no falta en un aquelarre?', options: ['Brujas', 'Zombis', 'Momias'], correct: 0 },
-    { question: '¿Dónde descansarás en 2026?', options: ['Tulum', 'Cancún', 'Playa del Carmen'], correct: 2 }
-];
-
-startBtn.addEventListener('click', () => {
-    username = usernameInput.value.trim();
-    if (!username) return alert('Ingresa tu nombre para comenzar');
-    userInput.classList.add('hidden');
-    gameContainer.classList.remove('hidden');
-    bgMusic.play();
-    loadQuestion();
-});
-
-function loadQuestion() {
-    if (currentQuestion >= questions.length) {
-        showResult(true);
-        return;
-    }
-    const q = questions[currentQuestion];
-    greeting.textContent = `👻 Hola ${username}monster!`;
-    livesContainer.innerHTML = '❤️'.repeat(lives).replace(/❤️/g, '<img src="witch.png" alt="vida">');
-    questionContainer.textContent = q.question;
-
-    optionsContainer.innerHTML = '';
-    q.options.forEach((opt, i) => {
-        const div = document.createElement('div');
-        div.className = 'option';
-        div.innerHTML = `${opt}`;
-        div.onclick = () => checkAnswer(i);
-        optionsContainer.appendChild(div);
-    });
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(circle at top, #1a001a 0%, #000 100%);
+    font-family: 'Creepster', cursive;
+    color: #ff0000;
+    text-align: center;
 }
-
-function checkAnswer(selected) {
-    const q = questions[currentQuestion];
-    if (selected === q.correct) {
-        correctSound.play();
-        currentQuestion++;
-        loadQuestion();
-    } else {
-        wrongSound.play();
-        lives--;
-        if (lives <= 0) showResult(false);
-        else loadQuestion();
-    }
+.title {
+    margin-top: 100px;
+    font-size: 2em;
+    text-shadow: 3px 3px 8px black;
 }
-
-function showResult(win) {
-    gameContainer.classList.add('hidden');
-    resultContainer.classList.remove('hidden');
-    if (win) {
-        resultContainer.innerHTML = `🧙‍♀️ PLAYA DEL CARMEN<br>del 17 al 24 de marzo del 2026<br>✈️ 🏨`;
-    } else {
-        resultContainer.innerHTML = `💀 Has perdido todas tus vidas<br><button onclick="restart()">Volver a jugar</button>`;
-    }
+#username {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    width: 60%;
+    text-align: center;
 }
-
-function restart() {
-    currentQuestion = 0;
-    lives = 3;
-    resultContainer.classList.add('hidden');
-    userInput.classList.remove('hidden');
+button {
+    margin-top: 15px;
+    padding: 12px 30px;
+    border: none;
+    background: #a64cff;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+.sky {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: -1;
+}
+.moon {
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, #fff, #ccc);
+    border-radius: 50%;
+    box-shadow: 0 0 40px #fff8;
+}
+.cloud {
+    position: absolute;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    animation: moveClouds 60s linear infinite;
+}
+.cloud1 { top: 20%; left: -200px; width: 200px; height: 60px; animation-delay: 0s; }
+.cloud2 { top: 50%; left: -300px; width: 300px; height: 80px; animation-delay: 15s; }
+@keyframes moveClouds {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(120vw); }
+}
+#question-text {
+    color: #ff0000;
+    text-shadow: 2px 2px 3px black;
+    font-size: 1.5em;
+    margin: 20px;
+}
+.option-btn {
+    display: block;
+    margin: 10px auto;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.1em;
+    width: 70%;
+}
+.vampire { background: #8B0000; }
+.witch { background: #4B0082; }
+.zombie { background: #228B22; }
+#lives img {
+    width: 40px;
+    margin: 5px;
 }
