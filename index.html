@@ -1,69 +1,55 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Halloween Quiz - Descubre tu próximo destino</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredericka+the+Great&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halloween Quiz - Descubre tu próximo destino</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredericka+the+Great&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="app">
-    <!-- Pantalla de inicio -->
-    <section id="start-screen" class="screen">
-      <div class="start-content">
-        <h1 class="main-title">DESCUBRE TU PRÓXIMO DESTINO</h1>
-        <div class="start-card">
-          <label for="username">USER NAME</label>
-          <input id="username" type="text" placeholder="Ingresa tu nombre" maxlength="20">
-          <button id="start-btn" class="btn primary">COMENZAR</button>
-          <p class="small-hint">¡Haz tu mejor esfuerzo... la luna te observa!</p>
-        </div>
+<div id="app">
+  <section id="start-screen" class="screen">
+    <div class="start-content">
+      <h1 class="main-title">DESCUBRE TU PRÓXIMO DESTINO</h1>
+      <div class="start-card">
+        <label for="username">USER NAME</label>
+        <input id="username" type="text" placeholder="Ingresa tu nombre" maxlength="20">
+        <button id="start-btn" class="btn primary">COMENZAR</button>
+        <p class="small-hint">¡Haz tu mejor esfuerzo... la luna te observa!</p>
       </div>
-
-      <!-- Fondo luna y nubes -->
+    </div>
+    <div class="moon"></div>
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+  </section>
+  <section id="game-screen" class="screen hidden">
+    <header class="game-header">
+      <div id="greeting">HELLO Monster!</div>
+      <div id="lives">Vidas: <span id="life-icons"></span></div>
+    </header>
+    <main class="game-main">
+      <div id="question-card">
+        <h2 id="question-text"></h2>
+        <div id="answers" class="answers-grid"></div>
+      </div>
       <div class="moon"></div>
       <div class="cloud cloud1"></div>
       <div class="cloud cloud2"></div>
       <div class="cloud cloud3"></div>
-    </section>
-
-    <!-- Pantalla de juego -->
-    <section id="game-screen" class="screen hidden">
-      <header class="game-header">
-        <div id="greeting">HELLO Monster!</div>
-        <div id="lives">Vidas: <span id="life-icons"></span></div>
-      </header>
-      <main class="game-main">
-        <div id="question-card">
-          <h2 id="question-text"></h2>
-          <div id="answers" class="answers-grid"></div>
-        </div>
-
-        <!-- Fondo luna y nubes -->
-        <div class="moon"></div>
-        <div class="cloud cloud1"></div>
-        <div class="cloud cloud2"></div>
-        <div class="cloud cloud3"></div>
-      </main>
-    </section>
-
-    <!-- Pantalla final -->
-    <section id="end-screen" class="screen hidden">
-      <div class="end-card">
-        <h2 id="end-title"></h2>
-        <p id="end-sub"></p>
-        <p id="end-small" class="small-note">incluye ✈️🏨</p>
-        <button id="play-again" class="btn">Jugar otra vez</button>
-      </div>
-    </section>
-  </div>
-
-  <audio id="bg-audio" loop preload="auto"></audio>
-  <audio id="boo-sfx" preload="auto"></audio>
-  <audio id="witch-laugh" preload="auto"></audio>
-  <audio id="start-sfx" preload="auto"></audio>
-
-  <script src="script.js"></script>
+    </main>
+  </section>
+  <section id="end-screen" class="screen hidden">
+    <div class="end-card">
+      <h2 id="end-title"></h2>
+      <p id="end-sub"></p>
+      <p id="end-small" class="small-note">incluye ✈️🏨</p>
+      <button id="play-again" class="btn">Jugar otra vez</button>
+    </div>
+  </section>
+</div>
+<script src="script.js"></script>
 </body>
 </html>
