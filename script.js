@@ -1,93 +1,82 @@
-const startBtn = document.getElementById('start-btn');
+const startBtn = document.getElementById('startBtn');
 const usernameInput = document.getElementById('username');
+const userInput = document.getElementById('userInput');
+const gameContainer = document.getElementById('gameContainer');
 const greeting = document.getElementById('greeting');
-const questionText = document.getElementById('question-text');
-const optionsContainer = document.getElementById('options');
+const questionContainer = document.getElementById('questionContainer');
+const optionsContainer = document.getElementById('optionsContainer');
+const resultContainer = document.getElementById('resultContainer');
 const livesContainer = document.getElementById('lives');
-const bgMusic = document.getElementById('bg-music');
-const witchLaugh = document.getElementById('witch-laugh');
-const ghostSound = document.getElementById('ghost-sound');
+const bgMusic = document.getElementById('bgMusic');
+const correctSound = document.getElementById('correctSound');
+const wrongSound = document.getElementById('wrongSound');
 
+let username = '';
 let currentQuestion = 0;
 let lives = 3;
-let username = '';
+
 const questions = [
-    { q: '¿Cuándo nos hicimos novios?', options: ['16/01/22', '16/01/23', '15/01/22'], answer: 0 },
-    { q: '¿Cómo se llamaba el lugar donde nos conocimos?', options: ['Eterno', 'Xtasis', 'Xcso'], answer: 1 },
-    { q: '¿En qué año nos conocimos?', options: ['2022', '2021', '2019'], answer: 1 },
-    { q: '¿Qué vestida nos presentó?', options: ['Isaí', 'Lady Gaga', 'Alexis'], answer: 2 },
-    { q: '¿Cuál fue la primera ciudad a la que fuimos de viaje?', options: ['Sayulita', 'Guanajuato', 'CDMX'], answer: 1 },
-    { q: '¿Cuántos años cumplimos de novios en enero 2026?', options: ['4', '5', '3'], answer: 0 },
-    { q: '¿Cuál era nuestra actividad principal cuando nos conocimos?', options: ['Salir a correr', 'Ir a comer pozole', 'Salir a caminar'], answer: 2 },
-    { q: '¿Quién envió el primer mensaje al otro?', options: ['Andrés', 'Enrique'], answer: 0 },
-    { q: '¿Cuál fue la primera playa que conocimos juntos?', options: ['PV', 'Playa del Carmen', 'Sayulita'], answer: 2 },
-    { q: '¿Quién dijo primero "te amo"?', options: ['Andrés', 'Enrique'], answer: 0 }
+    { question: '¿Qué criatura aparece solo en luna llena?', options: ['Vampiro', 'Hombre Lobo', 'Momia'], correct: 1 },
+    { question: '¿Qué elemento no falta en un aquelarre?', options: ['Brujas', 'Zombis', 'Momias'], correct: 0 },
+    { question: '¿Dónde descansarás en 2026?', options: ['Tulum', 'Cancún', 'Playa del Carmen'], correct: 2 }
 ];
 
 startBtn.addEventListener('click', () => {
-    username = usernameInput.value.trim() || 'Amigo';
-    document.getElementById('start-screen').classList.remove('active');
-    document.getElementById('question-screen').classList.add('active');
-    greeting.innerHTML = `HELLO ${username} Monster!`;
+    username = usernameInput.value.trim();
+    if (!username) return alert('Ingresa tu nombre para comenzar');
+    userInput.classList.add('hidden');
+    gameContainer.classList.remove('hidden');
     bgMusic.play();
-    showQuestion();
+    loadQuestion();
 });
 
-function showQuestion() {
+function loadQuestion() {
     if (currentQuestion >= questions.length) {
-        showResult();
+        showResult(true);
         return;
     }
     const q = questions[currentQuestion];
-    questionText.textContent = q.q;
+    greeting.textContent = `👻 Hola ${username}monster!`;
+    livesContainer.innerHTML = '❤️'.repeat(lives).replace(/❤️/g, '<img src="witch.png" alt="vida">');
+    questionContainer.textContent = q.question;
+
     optionsContainer.innerHTML = '';
-    const classes = ['vampire', 'witch', 'zombie'];
     q.options.forEach((opt, i) => {
-        const btn = document.createElement('button');
-        btn.textContent = opt;
-        btn.classList.add('option-btn', classes[i % 3]);
-        btn.onclick = () => checkAnswer(i);
-        optionsContainer.appendChild(btn);
+        const div = document.createElement('div');
+        div.className = 'option';
+        div.innerHTML = `${opt}`;
+        div.onclick = () => checkAnswer(i);
+        optionsContainer.appendChild(div);
     });
-    renderLives();
 }
 
 function checkAnswer(selected) {
-    const correct = questions[currentQuestion].answer;
-    if (selected === correct) {
-        witchLaugh.play();
+    const q = questions[currentQuestion];
+    if (selected === q.correct) {
+        correctSound.play();
+        currentQuestion++;
+        loadQuestion();
     } else {
-        ghostSound.play();
+        wrongSound.play();
         lives--;
-        if (lives <= 0) return restartGame();
-    }
-    currentQuestion++;
-    showQuestion();
-}
-
-function renderLives() {
-    livesContainer.innerHTML = '';
-    for (let i = 0; i < lives; i++) {
-        const img = document.createElement('img');
-        img.src = 'images/witch.png';
-        livesContainer.appendChild(img);
+        if (lives <= 0) showResult(false);
+        else loadQuestion();
     }
 }
 
-function showResult() {
-    document.getElementById('question-screen').classList.remove('active');
-    document.getElementById('result-screen').classList.add('active');
-    const msg = lives > 0
-        ? '✨ PLAYA DEL CARMEN ✨<br>Del 17 al 24 de marzo del 2026<br><small>Incluye ✈️ 🏨</small>'
-        : 'Perdiste todas tus vidas 😢';
-    document.getElementById('result-message').innerHTML = msg;
+function showResult(win) {
+    gameContainer.classList.add('hidden');
+    resultContainer.classList.remove('hidden');
+    if (win) {
+        resultContainer.innerHTML = `🧙‍♀️ PLAYA DEL CARMEN<br>del 17 al 24 de marzo del 2026<br>✈️ 🏨`;
+    } else {
+        resultContainer.innerHTML = `💀 Has perdido todas tus vidas<br><button onclick="restart()">Volver a jugar</button>`;
+    }
 }
 
-document.getElementById('restart-btn').addEventListener('click', restartGame);
-function restartGame() {
-    lives = 3;
+function restart() {
     currentQuestion = 0;
-    document.getElementById('result-screen').classList.remove('active');
-    document.getElementById('question-screen').classList.add('active');
-    showQuestion();
+    lives = 3;
+    resultContainer.classList.add('hidden');
+    userInput.classList.remove('hidden');
 }

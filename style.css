@@ -1,87 +1,104 @@
 body {
     margin: 0;
-    padding: 0;
     height: 100vh;
     overflow: hidden;
-    background: radial-gradient(circle at top, #0b0b12, #000);
-    color: white;
+    background: radial-gradient(circle at top, #1a001a 0%, #000 100%);
     font-family: 'Creepster', cursive;
+    color: #ff0000;
     text-align: center;
+    position: relative;
 }
-.title {
-    margin-top: 100px;
+
+#title {
     font-size: 2em;
-    text-shadow: 3px 3px 8px black;
+    margin-top: 30px;
 }
-#username {
+
+#userInput {
     margin-top: 20px;
+}
+
+#username {
     padding: 10px;
-    border-radius: 8px;
-    border: none;
-    width: 60%;
+    font-size: 1em;
+    border-radius: 10px;
+    border: 2px solid #ff0000;
     text-align: center;
 }
+
 button {
-    margin-top: 15px;
-    padding: 12px 30px;
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 1em;
+    background: #ff0000;
+    color: #000;
     border: none;
-    background: #a64cff;
-    color: white;
     border-radius: 10px;
     cursor: pointer;
-    font-size: 1.2em;
 }
-.sky {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    z-index: -1;
+
+.hidden {
+    display: none;
 }
-.moon {
-    position: absolute;
-    top: 10%;
-    right: 10%;
-    width: 120px;
-    height: 120px;
-    background: radial-gradient(circle, #fff, #ccc);
-    border-radius: 50%;
-    box-shadow: 0 0 40px #fff8;
+
+#hud {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
 }
-.cloud {
-    position: absolute;
-    background: rgba(255,255,255,0.3);
-    border-radius: 50%;
-    animation: moveClouds 60s linear infinite;
-}
-.cloud1 { top: 20%; left: -200px; width: 200px; height: 60px; animation-delay: 0s; }
-.cloud2 { top: 50%; left: -300px; width: 300px; height: 80px; animation-delay: 15s; }
-@keyframes moveClouds {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(120vw); }
-}
-#question-text {
-    color: white;
-    text-shadow: 2px 2px 3px black;
-    font-size: 1.5em;
-    margin: 20px;
-}
-.option-btn {
-    display: block;
-    margin: 10px auto;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 1.1em;
-    width: 70%;
-}
-.vampire { background: #8B0000; }
-.witch { background: #4B0082; }
-.zombie { background: #228B22; }
+
 #lives img {
     width: 40px;
-    margin: 5px;
+    height: 40px;
+}
+
+#questionContainer {
+    font-size: 1.5em;
+    margin-top: 40px;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.option {
+    background: rgba(0,0,0,0.6);
+    border: 2px solid #ff0000;
+    border-radius: 15px;
+    margin: 10px auto;
+    padding: 10px;
+    width: 80%;
+    cursor: pointer;
+    transition: 0.3s;
+    color: white;
+}
+
+.option:hover {
+    background: #660000;
+}
+
+#resultContainer {
+    font-size: 2em;
+    margin-top: 60px;
+}
+
+/* Fondo animado */
+.luna {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 120px;
+    height: 120px;
+    background: url('moon.png') no-repeat center/contain;
+}
+
+.nube {
+    position: absolute;
+    top: 50px;
+    background: url('cloud.png') no-repeat center/contain;
+    width: 200px;
+    height: 100px;
+    animation: moveClouds 25s linear infinite;
+}
+
+@keyframes moveClouds {
+    0% { left: -250px; }
+    100% { left: 110%; }
 }
