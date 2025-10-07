@@ -1,10 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Halloween Quiz - Descubre tu próximo destino</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div id="app">
@@ -12,11 +13,12 @@
       <h1 class="main-title">DESCUBRE TU PRÓXIMO DESTINO</h1>
       <div class="start-card">
         <label for="username">USER NAME</label>
-        <input id="username" type="text" placeholder="Ingresa tu nombre" maxlength="20" />
+        <input id="username" type="text" placeholder="Ingresa tu nombre" maxlength="20">
         <button id="start-btn" class="btn primary">COMENZAR</button>
         <p class="small-hint">¡Haz tu mejor esfuerzo... las brujitas observan!</p>
       </div>
     </section>
+
     <section id="game-screen" class="screen hidden">
       <header class="game-header">
         <div id="greeting">HELLO Monster!</div>
@@ -29,6 +31,7 @@
         </div>
       </main>
     </section>
+
     <section id="end-screen" class="screen hidden">
       <div class="end-card">
         <h2 id="end-title"></h2>
@@ -38,10 +41,12 @@
       </div>
     </section>
   </div>
+
   <audio id="bg-audio" loop preload="auto"></audio>
   <audio id="boo-sfx" preload="auto"></audio>
   <audio id="witch-laugh" preload="auto"></audio>
   <audio id="start-sfx" preload="auto"></audio>
+
   <script src="script.js"></script>
 </body>
 </html>
