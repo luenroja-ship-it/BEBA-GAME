@@ -1,32 +1,93 @@
+const startBtn = document.getElementById('start-btn');
+const usernameInput = document.getElementById('username');
+const greeting = document.getElementById('greeting');
+const questionText = document.getElementById('question-text');
+const optionsContainer = document.getElementById('options');
+const livesContainer = document.getElementById('lives');
+const bgMusic = document.getElementById('bg-music');
+const witchLaugh = document.getElementById('witch-laugh');
+const ghostSound = document.getElementById('ghost-sound');
 
-const QUESTIONS=[
-{q:"¿Cuándo nos hicimos novios?",a:["16/01/22","16/01/23","15/01/22"],correct:0},
-{q:"¿Cómo se llamaba el lugar donde nos conocimos?",a:["Eterno","Xtasis","Xcso"],correct:1},
-{q:"¿En que año nos conocimos?",a:["2022","2021","2019"],correct:1},
-{q:"¿Qué vestida nos presentó?",a:["Isaí","Lady Gaga","Alexis"],correct:2},
-{q:"¿Cuál fue la prima ciudad a la que fuimos de viaje?",a:["Sayulita","Guanajuato","CDMX"],correct:1},
-{q:"¿Cuántos años cumplimos de novios en enero 2026?",a:["4","5","3"],correct:0},
-{q:"¿Cuál era nuestra actividad principal cuando nos conocimos?",a:["salir a correr","ir a comer pozole","salir a caminar"],correct:2},
-{q:"¿Quien envio le envio el primer mensaje al otro?",a:["Andres","Enrique"],correct:0},
-{q:"Cual fue la primera playa que conocimos juntos?",a:["PV","Playa del Carmen","Sayulita"],correct:1},
-{q:"Quien dijo primero te amo?",a:["Andres","Enrique"],correct:0}
+let currentQuestion = 0;
+let lives = 3;
+let username = '';
+const questions = [
+    { q: '¿Cuándo nos hicimos novios?', options: ['16/01/22', '16/01/23', '15/01/22'], answer: 0 },
+    { q: '¿Cómo se llamaba el lugar donde nos conocimos?', options: ['Eterno', 'Xtasis', 'Xcso'], answer: 1 },
+    { q: '¿En qué año nos conocimos?', options: ['2022', '2021', '2019'], answer: 1 },
+    { q: '¿Qué vestida nos presentó?', options: ['Isaí', 'Lady Gaga', 'Alexis'], answer: 2 },
+    { q: '¿Cuál fue la primera ciudad a la que fuimos de viaje?', options: ['Sayulita', 'Guanajuato', 'CDMX'], answer: 1 },
+    { q: '¿Cuántos años cumplimos de novios en enero 2026?', options: ['4', '5', '3'], answer: 0 },
+    { q: '¿Cuál era nuestra actividad principal cuando nos conocimos?', options: ['Salir a correr', 'Ir a comer pozole', 'Salir a caminar'], answer: 2 },
+    { q: '¿Quién envió el primer mensaje al otro?', options: ['Andrés', 'Enrique'], answer: 0 },
+    { q: '¿Cuál fue la primera playa que conocimos juntos?', options: ['PV', 'Playa del Carmen', 'Sayulita'], answer: 2 },
+    { q: '¿Quién dijo primero "te amo"?', options: ['Andrés', 'Enrique'], answer: 0 }
 ];
-const startScreen=document.getElementById('start-screen'),
-gameScreen=document.getElementById('game-screen'),
-endScreen=document.getElementById('end-screen'),
-usernameInput=document.getElementById('username'),
-startBtn=document.getElementById('start-btn'),
-greeting=document.getElementById('greeting'),
-lifeIcons=document.getElementById('life-icons'),
-questionText=document.getElementById('question-text'),
-answersDiv=document.getElementById('answers'),
-endTitle=document.getElementById('end-title'),
-endSub=document.getElementById('end-sub'),
-playAgainBtn=document.getElementById('play-again');
-let currentIndex=0,lives=3,user="";
-function setLives(n){lives=n;lifeIcons.innerHTML="";for(let i=0;i<lives;i++){const s=document.createElement('span');s.innerText="🧙‍♀️";s.style.marginRight="6px";lifeIcons.appendChild(s);}if(lives<=0) endGame(false);}
-startBtn.addEventListener('click',()=>{user=usernameInput.value.trim()||"Guest";greeting.innerText=`HELLO ${user}Monster!`;startScreen.classList.add('hidden');gameScreen.classList.remove('hidden');setLives(3);currentIndex=0;renderQuestion();});
-function renderQuestion(){if(currentIndex>=QUESTIONS.length){endGame(true);return;}const q=QUESTIONS[currentIndex];questionText.innerText=`${currentIndex+1}. ${q.q}`;answersDiv.innerHTML="";for(let i=0;i<q.a.length;i++){const btn=document.createElement('button');btn.className='answer-btn';btn.innerHTML=q.a[i];btn.addEventListener('click',()=>handleAnswer(i));answersDiv.appendChild(btn);}}
-function handleAnswer(i){const q=QUESTIONS[currentIndex];if(i===q.correct){currentIndex++;setTimeout(()=>renderQuestion(),350);}else{setLives(lives-1);if(lives>0){currentIndex++;setTimeout(()=>renderQuestion(),350);}}}
-function endGame(win){gameScreen.classList.add('hidden');endScreen.classList.remove('hidden');if(win){endTitle.innerText="PLAYA DEL CARMEN";endSub.innerText="del 17 al 24 de marzo del 2026";}else{endTitle.innerText="¡Te quedaste sin vidas!";endSub.innerText="Se reiniciará el juego.";}}
-playAgainBtn.addEventListener('click',()=>{endScreen.classList.add('hidden');startScreen.classList.remove('hidden');usernameInput.value="";currentIndex=0;lives=3;});setLives(3);
+
+startBtn.addEventListener('click', () => {
+    username = usernameInput.value.trim() || 'Amigo';
+    document.getElementById('start-screen').classList.remove('active');
+    document.getElementById('question-screen').classList.add('active');
+    greeting.innerHTML = `HELLO ${username} Monster!`;
+    bgMusic.play();
+    showQuestion();
+});
+
+function showQuestion() {
+    if (currentQuestion >= questions.length) {
+        showResult();
+        return;
+    }
+    const q = questions[currentQuestion];
+    questionText.textContent = q.q;
+    optionsContainer.innerHTML = '';
+    const classes = ['vampire', 'witch', 'zombie'];
+    q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.textContent = opt;
+        btn.classList.add('option-btn', classes[i % 3]);
+        btn.onclick = () => checkAnswer(i);
+        optionsContainer.appendChild(btn);
+    });
+    renderLives();
+}
+
+function checkAnswer(selected) {
+    const correct = questions[currentQuestion].answer;
+    if (selected === correct) {
+        witchLaugh.play();
+    } else {
+        ghostSound.play();
+        lives--;
+        if (lives <= 0) return restartGame();
+    }
+    currentQuestion++;
+    showQuestion();
+}
+
+function renderLives() {
+    livesContainer.innerHTML = '';
+    for (let i = 0; i < lives; i++) {
+        const img = document.createElement('img');
+        img.src = 'images/witch.png';
+        livesContainer.appendChild(img);
+    }
+}
+
+function showResult() {
+    document.getElementById('question-screen').classList.remove('active');
+    document.getElementById('result-screen').classList.add('active');
+    const msg = lives > 0
+        ? '✨ PLAYA DEL CARMEN ✨<br>Del 17 al 24 de marzo del 2026<br><small>Incluye ✈️ 🏨</small>'
+        : 'Perdiste todas tus vidas 😢';
+    document.getElementById('result-message').innerHTML = msg;
+}
+
+document.getElementById('restart-btn').addEventListener('click', restartGame);
+function restartGame() {
+    lives = 3;
+    currentQuestion = 0;
+    document.getElementById('result-screen').classList.remove('active');
+    document.getElementById('question-screen').classList.add('active');
+    showQuestion();
+}

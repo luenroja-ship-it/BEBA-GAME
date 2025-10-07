@@ -1,55 +1,54 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Halloween Quiz - Descubre tu próximo destino</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredericka+the+Great&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEBA GAME - Halloween</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="app">
-  <section id="start-screen" class="screen">
-    <div class="start-content">
-      <h1 class="main-title">DESCUBRE TU PRÓXIMO DESTINO</h1>
-      <div class="start-card">
-        <label for="username">USER NAME</label>
-        <input id="username" type="text" placeholder="Ingresa tu nombre" maxlength="20">
-        <button id="start-btn" class="btn primary">COMENZAR</button>
-        <p class="small-hint">¡Haz tu mejor esfuerzo... la luna te observa!</p>
-      </div>
+    <audio id="bg-music" loop>
+        <source src="sounds/background.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ghost-sound">
+        <source src="sounds/ghost.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="witch-laugh">
+        <source src="sounds/witch-laugh.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="game-container">
+        <div id="start-screen" class="screen active">
+            <h1 class="title">🎃 DESCUBRE TU PRÓXIMO DESTINO 🎃</h1>
+            <input type="text" id="username" placeholder="Ingresa tu nombre" />
+            <button id="start-btn">Comenzar</button>
+            <div class="sky">
+                <div class="moon"></div>
+                <div class="cloud cloud1"></div>
+                <div class="cloud cloud2"></div>
+            </div>
+        </div>
+
+        <div id="question-screen" class="screen">
+            <div class="sky">
+                <div class="moon"></div>
+                <div class="cloud cloud1"></div>
+                <div class="cloud cloud2"></div>
+            </div>
+            <h2 id="greeting"></h2>
+            <div id="lives"></div>
+            <div id="question-container">
+                <p id="question-text"></p>
+                <div id="options"></div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="screen">
+            <h2 id="result-message"></h2>
+            <button id="restart-btn">Volver a jugar</button>
+        </div>
     </div>
-    <div class="moon"></div>
-    <div class="cloud cloud1"></div>
-    <div class="cloud cloud2"></div>
-    <div class="cloud cloud3"></div>
-  </section>
-  <section id="game-screen" class="screen hidden">
-    <header class="game-header">
-      <div id="greeting">HELLO Monster!</div>
-      <div id="lives">Vidas: <span id="life-icons"></span></div>
-    </header>
-    <main class="game-main">
-      <div id="question-card">
-        <h2 id="question-text"></h2>
-        <div id="answers" class="answers-grid"></div>
-      </div>
-      <div class="moon"></div>
-      <div class="cloud cloud1"></div>
-      <div class="cloud cloud2"></div>
-      <div class="cloud cloud3"></div>
-    </main>
-  </section>
-  <section id="end-screen" class="screen hidden">
-    <div class="end-card">
-      <h2 id="end-title"></h2>
-      <p id="end-sub"></p>
-      <p id="end-small" class="small-note">incluye ✈️🏨</p>
-      <button id="play-again" class="btn">Jugar otra vez</button>
-    </div>
-  </section>
-</div>
-<script src="script.js"></script>
+
+    <script src="script.js"></script>
 </body>
 </html>
