@@ -1,87 +1,123 @@
-body {
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    overflow: hidden;
-    background: radial-gradient(circle at top, #1a001a 0%, #000 100%);
-    font-family: 'Creepster', cursive;
-    color: #ff0000;
-    text-align: center;
+const introScreen = document.getElementById('intro-screen');
+const enterBtn = document.getElementById('enter-btn');
+const startScreen = document.getElementById('start-screen');
+const startBtn = document.getElementById('start-btn');
+const gameScreen = document.getElementById('game-screen');
+const resultScreen = document.getElementById('result-screen');
+
+const usernameInput = document.getElementById('username');
+const greetingEl = document.getElementById('greeting');
+const livesEl = document.getElementById('lives');
+const qnumEl = document.getElementById('qnum');
+const questionText = document.getElementById('question-text');
+const answersEl = document.getElementById('answers');
+
+const restartBtn = document.getElementById('restart-btn');
+
+const sfxStart = document.getElementById('sfx-start');
+const sfxGhost = document.getElementById('sfx-ghost');
+const sfxWitch = document.getElementById('sfx-witch');
+const bgMusic = document.getElementById('music-bg');
+
+const QUESTIONS = [
+  {q:"¿Cuándo nos hicimos novios?", a:["16/01/22","16/01/23","15/01/22"], correct:0},
+  {q:"¿Cómo se llamaba el lugar donde nos conocimos?", a:["Eterno","Xtasis","Xcso"], correct:1},
+  {q:"¿En que año nos conocimos?", a:["2022","2021","2019"], correct:1},
+  {q:"¿Qué vestida nos presentó?", a:["Isaí","Lady Gaga","Alexis"], correct:2},
+  {q:"¿Cuál fue la prima ciudad a la que fuimos de viaje?", a:["Sayulita","Guanajuato","CDMX"], correct:1},
+  {q:"¿Cuántos años cumplimos de novios en enero 2026?", a:["4","5","3"], correct:0},
+  {q:"¿Cuál era nuestra actividad principal cuando nos conocimos?", a:["salir a correr","ir a comer pozole","salir a caminar"], correct:2},
+  {q:"¿Quien envio le envio el primer mensaje al otro?", a:["Andres","Enrique"], correct:0},
+  {q:"Cual fue la primera playa que conocimos juntos?", a:["PV","Playa del Carmen","Sayulita"], correct:2},
+  {q:"Quien dijo primero te amo?", a:["Andres","Enrique"], correct:0}
+];
+
+let current = 0;
+let lives = 3;
+let user = "";
+
+function safePlay(audio){
+  if(!audio) return;
+  try{ audio.currentTime = 0; audio.play().catch(()=>{}); }catch(e){}
 }
-.title {
-    margin-top: 100px;
-    font-size: 2em;
-    text-shadow: 3px 3px 8px black;
+
+enterBtn.addEventListener('click', ()=> {
+  safePlay(sfxStart);
+  introScreen.classList.add('hidden');
+  startScreen.classList.remove('hidden');
+});
+
+startBtn.addEventListener('click', ()=> {
+  user = usernameInput.value.trim() || "Monster";
+  greetingEl.textContent = `HELLO ${user}monster!`;
+  safePlay(sfxStart);
+  startScreen.classList.add('hidden');
+  gameScreen.classList.remove('hidden');
+  current = 0; lives = 3;
+  renderQuestion();
+  safePlay(bgMusic);
+});
+
+function renderLives(){
+  livesEl.innerHTML = "";
+  for(let i=0;i<lives;i++){
+    livesEl.innerHTML += "🧙‍♀️ ";
+  }
 }
-#username {
-    margin-top: 20px;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    width: 60%;
-    text-align: center;
+
+function renderQuestion(){
+  if(current >= QUESTIONS.length){
+    showResult(true);
+    return;
+  }
+  qnumEl.textContent = (current+1);
+  const q = QUESTIONS[current];
+  questionText.textContent = q.q;
+  answersEl.innerHTML = "";
+  const icons = ["🧟","🧙‍♀️","🧛"];
+  const classes = ["opt-zombie","opt-witch","opt-vamp"];
+  for(let i=0;i<q.a.length;i++){
+    const b = document.createElement('button');
+    b.className = "answer-btn " + classes[i%3];
+    b.innerHTML = '<span class="icon">'+icons[i%3]+'</span><span class="label">'+q.a[i]+'</span>';
+    b.onclick = ()=> handleAnswer(i);
+    answersEl.appendChild(b);
+  }
+  renderLives();
 }
-button {
-    margin-top: 15px;
-    padding: 12px 30px;
-    border: none;
-    background: #a64cff;
-    color: white;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 1.2em;
+
+function handleAnswer(idx){
+  const q = QUESTIONS[current];
+  if(idx === q.correct){
+    safePlay(sfxWitch);
+  } else {
+    safePlay(sfxGhost);
+    lives--;
+    if(lives <= 0){
+      showResult(false);
+      return;
+    }
+  }
+  current++;
+  setTimeout(()=> renderQuestion(), 350);
 }
-.sky {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    z-index: -1;
+
+function showResult(win){
+  gameScreen.classList.add('hidden');
+  resultScreen.classList.remove('hidden');
+  const title = document.getElementById('result-title');
+  const sub = document.getElementById('result-sub');
+  if(win){
+    title.innerHTML = '🧙‍♀️ PLAYA DEL CARMEN';
+    sub.innerHTML = 'del 17 al 24 de marzo del 2026<br><small>incluye ✈️ 🏨</small>';
+  } else {
+    title.innerHTML = '💀 Te quedaste sin vidas';
+    sub.innerHTML = 'Vuelve a intentarlo si te atreves...';
+  }
+  try{ bgMusic.pause(); bgMusic.currentTime=0; }catch(e){}
 }
-.moon {
-    position: absolute;
-    top: 10%;
-    right: 10%;
-    width: 120px;
-    height: 120px;
-    background: radial-gradient(circle, #fff, #ccc);
-    border-radius: 50%;
-    box-shadow: 0 0 40px #fff8;
-}
-.cloud {
-    position: absolute;
-    background: rgba(255,255,255,0.3);
-    border-radius: 50%;
-    animation: moveClouds 60s linear infinite;
-}
-.cloud1 { top: 20%; left: -200px; width: 200px; height: 60px; animation-delay: 0s; }
-.cloud2 { top: 50%; left: -300px; width: 300px; height: 80px; animation-delay: 15s; }
-@keyframes moveClouds {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(120vw); }
-}
-#question-text {
-    color: #ff0000;
-    text-shadow: 2px 2px 3px black;
-    font-size: 1.5em;
-    margin: 20px;
-}
-.option-btn {
-    display: block;
-    margin: 10px auto;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 1.1em;
-    width: 70%;
-}
-.vampire { background: #8B0000; }
-.witch { background: #4B0082; }
-.zombie { background: #228B22; }
-#lives img {
-    width: 40px;
-    margin: 5px;
-}
+
+restartBtn.addEventListener('click', ()=> {
+  resultScreen.classList.add('hidden');
+  introScreen.classList.remove('hidden');
+});

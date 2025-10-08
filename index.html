@@ -1,48 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BEBA GAME</title>
-<link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BEBA GAME - Retro Witch Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Creepster&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <audio id="bg-music" loop>
-        <source src="sounds/background.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="ghost-sound"><source src="sounds/ghost.mp3" type="audio/mpeg"></audio>
-    <audio id="witch-laugh"><source src="sounds/witch-laugh.mp3" type="audio/mpeg"></audio>
+  <!-- intro screen -->
+  <div id="intro-screen" class="screen active">
+    <div class="bg-layer"></div>
+    <div class="fog"></div>
+    <div class="container">
+      <h1 class="bigline">⚰️ Bienvenido al juego maldito...</h1>
+      <p class="subline">¿Te atreves a descubrir tu destino?</p>
+      <button id="enter-btn" class="btn big">Entrar si te atreves</button>
+    </div>
+  </div>
 
-    <div id="start-screen" class="screen active">
-        <h1 class="title">🎃 DESCUBRE TU PRÓXIMO DESTINO 🎃</h1>
-        <input type="text" id="username" placeholder="Ingresa tu nombre" />
-        <button id="start-btn">Comenzar</button>
-        <div class="sky">
-            <div class="moon"></div>
-            <div class="cloud cloud1"></div>
-            <div class="cloud cloud2"></div>
-        </div>
+  <!-- start screen -->
+  <div id="start-screen" class="screen hidden">
+    <div class="bg-layer"></div>
+    <div class="fog"></div>
+    <div class="container">
+      <h1 class="title">🎃 DESCUBRE TU PRÓXIMO DESTINO 🎃</h1>
+      <input id="username" type="text" placeholder="INGRESA TU USER NAME" maxlength="20" />
+      <button id="start-btn" class="btn">COMENZAR</button>
+      <p class="hint">Consejo: responde con el corazón... o con la memoria.</p>
+    </div>
+  </div>
+
+  <!-- game screen -->
+  <div id="game-screen" class="screen hidden">
+    <div class="bg-layer"></div>
+    <div class="fog"></div>
+
+    <div class="hud">
+      <div id="greeting" class="greeting">HELLO Monster!</div>
+      <div id="lives" class="lives">🧙‍♀️ 🧙‍♀️ 🧙‍♀️</div>
     </div>
 
-    <div id="question-screen" class="screen">
-        <div class="sky">
-            <div class="moon"></div>
-            <div class="cloud cloud1"></div>
-            <div class="cloud cloud2"></div>
-        </div>
-        <h2 id="greeting"></h2>
-        <div id="lives"></div>
-        <div id="question-container">
-            <p id="question-text"></p>
-            <div id="options"></div>
-        </div>
+    <div class="game-area">
+      <div id="question-index" class="qindex">Pregunta <span id="qnum">1</span>/10</div>
+      <div id="question-card" class="card">
+        <div id="question-text" class="question-text">...</div>
+        <div id="answers" class="answers"></div>
+      </div>
     </div>
+  </div>
 
-    <div id="result-screen" class="screen">
-        <h2 id="result-message"></h2>
-        <button id="restart-btn">Volver a jugar</button>
+  <!-- result screen -->
+  <div id="result-screen" class="screen hidden">
+    <div class="bg-layer"></div>
+    <div class="fog"></div>
+    <div class="container result">
+      <div id="result-title" class="result-title"></div>
+      <div id="result-sub" class="result-sub"></div>
+      <button id="restart-btn" class="btn">Volver a jugar</button>
     </div>
+  </div>
+
+  <!-- audio elements (local files to be placed in sounds/) -->
+  <audio id="sfx-start" preload="auto" src="./sounds/start-boo.mp3"></audio>
+  <audio id="sfx-ghost" preload="auto" src="./sounds/ghost-boo.mp3"></audio>
+  <audio id="sfx-witch" preload="auto" src="./sounds/witch-laugh.mp3"></audio>
+  <audio id="music-bg" loop preload="auto" src="./sounds/background-loop.mp3"></audio>
 
 <script src="script.js"></script>
 </body>

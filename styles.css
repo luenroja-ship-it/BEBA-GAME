@@ -1,89 +1,62 @@
-const startBtn = document.getElementById('start-btn');
-const usernameInput = document.getElementById('username');
-const greeting = document.getElementById('greeting');
-const questionText = document.getElementById('question-text');
-const optionsContainer = document.getElementById('options');
-const livesContainer = document.getElementById('lives');
-const bgMusic = document.getElementById('bg-music');
-const witchLaugh = document.getElementById('witch-laugh');
-const ghostSound = document.getElementById('ghost-sound');
-
-let currentQuestion = 0;
-let lives = 3;
-let username = '';
-const questions = [
-    { q: '¿Cuándo nos hicimos novios?', options: ['16/01/22', '16/01/23', '15/01/22'], answer: 0 },
-    { q: '¿Cómo se llamaba el lugar donde nos conocimos?', options: ['Eterno', 'Xtasis', 'Xcso'], answer: 1 },
-    { q: '¿En qué año nos conocimos?', options: ['2022', '2021', '2019'], answer: 1 },
-    { q: '¿Qué vestida nos presentó?', options: ['Isaí', 'Lady Gaga', 'Alexis'], answer: 2 },
-    { q: '¿Cuál fue la primera ciudad a la que fuimos de viaje?', options: ['Sayulita', 'Guanajuato', 'CDMX'], answer: 1 },
-    { q: '¿Cuántos años cumplimos de novios en enero 2026?', options: ['4', '5', '3'], answer: 0 },
-    { q: '¿Cuál era nuestra actividad principal cuando nos conocimos?', options: ['Salir a correr', 'Ir a comer pozole', 'Salir a caminar'], answer: 2 },
-    { q: '¿Quién le envió el primer mensaje al otro?', options: ['Andrés', 'Enrique'], answer: 0 },
-    { q: '¿Cuál fue la primera playa que conocimos juntos?', options: ['PV', 'Playa del Carmen', 'Sayulita'], answer: 2 },
-    { q: '¿Quién dijo primero te amo?', options: ['Andrés', 'Enrique'], answer: 0 }
-];
-
-startBtn.addEventListener('click', () => {
-    username = usernameInput.value.trim() || 'Amigo';
-    document.getElementById('start-screen').classList.remove('active');
-    document.getElementById('question-screen').classList.add('active');
-    greeting.innerHTML = `HELLO ${username} Monster!`;
-    bgMusic.play();
-    showQuestion();
-});
-
-function showQuestion() {
-    if (currentQuestion >= questions.length) {
-        showResult();
-        return;
-    }
-    const q = questions[currentQuestion];
-    questionText.textContent = q.q;
-    optionsContainer.innerHTML = '';
-    const classes = ['vampire', 'witch', 'zombie'];
-    q.options.forEach((opt, i) => {
-        const btn = document.createElement('button');
-        btn.textContent = opt;
-        btn.classList.add('option-btn', classes[i % 3]);
-        btn.onclick = () => checkAnswer(i);
-        optionsContainer.appendChild(btn);
-    });
-    renderLives();
+:root{
+  --red:#ff1a1a;
+  --accent:#9b59b6;
+  --dark:#060006;
+  --card:#0f0b13;
 }
-
-function checkAnswer(selected) {
-    const correct = questions[currentQuestion].answer;
-    if (selected === correct) {
-        witchLaugh.play();
-    } else {
-        ghostSound.play();
-        lives--;
-        if (lives <= 0) return restartGame();
-    }
-    currentQuestion++;
-    showQuestion();
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#000;font-family:'Press Start 2P','Creepster',monospace;}
+.screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;color:var(--red);overflow:hidden}
+.hidden{display:none}
+.bg-layer{
+  position:absolute;inset:0;background-image:url('./images/bg.png');background-size:cover;background-position:center;filter:grayscale(8%) contrast(85%) brightness(45%);
+  transform:scale(1.02);z-index:0;
 }
-
-function renderLives() {
-    livesContainer.innerHTML = '';
-    for (let i = 0; i < lives; i++) {
-        const img = document.createElement('img');
-        img.src = 'images/witch.png';
-        livesContainer.appendChild(img);
-    }
+/* fog layer (tile) */
+.fog{position:absolute;inset:0;z-index:1;pointer-events:none}
+.fog::after{
+  content:"";position:absolute;inset:-20% -20%;
+  background: url('./images/fog.png') repeat-x;
+  opacity:0.45;animation: drift 40s linear infinite;filter: blur(2px);
 }
+@keyframes drift{from{transform:translateX(0)} to{transform:translateX(-50%)}}
 
-function showResult() {
-    document.getElementById('question-screen').classList.remove('active');
-    document.getElementById('result-screen').classList.add('active');
-    document.getElementById('result-message').innerHTML = '🧙‍♀️ PLAYA DEL CARMEN<br>del 17 al 24 de marzo del 2026<br> INCLUYE✈️ 🏨';
-}
+/* containers */
+.container{position:relative;z-index:2;max-width:900px;padding:20px;text-align:center}
+.bigline{font-size:18px;margin:0 0 12px}
+.subline{font-size:12px;margin:0 0 20px;color:#f3d}
+.btn{font-family:'Press Start 2P',monospace;background:linear-gradient(180deg,#3e1a3e,#2a0a2a);border:3px solid #4b103b;color:#ffd;padding:12px 18px;border-radius:6px;cursor:pointer;box-shadow:4px 6px 0 rgba(0,0,0,0.6)}
+.btn.big{padding:16px 28px;font-size:12px}
+.title{font-size:22px;letter-spacing:1px}
+.hint{font-family:'Creepster',cursive;font-size:11px;color:#ff8}
 
-document.getElementById('restart-btn').addEventListener('click', restartGame);
-function restartGame() {
-    lives = 3;
-    currentQuestion = 0;
-    document.getElementById('result-screen').classList.remove('active');
-    document.getElementById('start-screen').classList.add('active');
+/* HUD */
+.hud{position:relative;z-index:2;top:20px;display:flex;justify-content:space-between;width:95%;max-width:900px;margin:0 auto;padding:10px}
+.greeting{font-size:12px;color:var(--accent)}
+.lives{font-size:22px;letter-spacing:6px}
+
+/* game area */
+.game-area{position:relative;z-index:2;max-width:920px;width:100%;margin-top:30px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.qindex{font-size:10px;color:#f6c}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:2px solid rgba(255,255,255,0.03);padding:18px;border-radius:6px;width:86%;max-width:640px;backdrop-filter: blur(2px)}
+.question-text{font-size:14px;margin:0 0 12px;color:var(--red);text-shadow: 2px 2px 0 #000}
+.answers{display:flex;flex-direction:column;gap:10px}
+.answer-btn{font-family:'Press Start 2P',monospace;padding:10px;border-radius:6px;border:2px solid #000;background:#172;color:#fff;cursor:pointer;display:flex;align-items:center;gap:12px}
+.answer-btn .icon{font-size:20px}
+
+/* retro themes */
+.opt-zombie{background:linear-gradient(90deg,#185a14,#2b8a3b);border-color:#08350a}
+.opt-witch{background:linear-gradient(90deg,#3b0073,#6f1fb3);border-color:#21003f}
+.opt-vamp{background:linear-gradient(90deg,#48000b,#7b0016);border-color:#2a0006}
+
+/* result */
+.result{z-index:2;color:var(--red);font-size:14px}
+.result-title{font-size:18px;margin-bottom:8px}
+.result-sub{font-size:10px;color:#ffd}
+
+/* responsive */
+@media (max-width:480px){
+  .title{font-size:16px}
+  .question-text{font-size:12px}
+  .lives{font-size:18px}
 }
